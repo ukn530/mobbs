@@ -1,0 +1,45 @@
+extends layout
+block content
+
+  #comment(data-role="page")
+    .header(data-role='header')
+      h1#comment-title コメント:#{comment.title}
+      a.ui-btn-right(href='/#topics', data-ajax='false', data-role='button') トピック一覧
+
+    div(data-role='navbar')
+      ul
+        if comment.parentCommentId !== null
+          li
+            a(href='/comment/' + comment.parentCommentId + '/', data-ajax='false', data-role='button')親コメントへ
+        li
+          a(href='/topic/' + comment.topicId + '/', data-ajax='false', data-role='button')トピックへ
+
+    div(data-role='content')
+      h1 #{comment.title}
+      p #{comment.text}
+      p
+        | #{comment.date},
+        a(href='#{comment.relatedUrl}') #{comment.postBy}
+
+        div(data-role="collapsible", data-theme="b", data-content-theme="c", data-collapsed='false')
+          h2 コメント:
+          ul#subcomments-listview(data-role='listview', mobbs-comment-id=comment.commentId)
+
+        div(data-role="collapsible", data-theme="b", data-content-theme="c")
+          h2 コメントを投稿する
+          form(action='/comment/create/', method='post', data-ajax='false')
+            input(type='hidden', name='parentCommentId', value='#{comment.commentId}')
+            input(type='hidden', name='topicId' value='#{comment.topicId}')
+            label(for='comment-post-name') お名前:
+            input(type='text', id='comment-post-name', name='name')
+            label(for='comment-post-related') URL:
+            input(type='url', id='comment-post-related', name='relatedUrl')
+            label(for='comment-post-title') タイトル:
+              input(type='text', id='comment-post-title', name='title', value='Re: ' + comment.title)
+            label(for='comment-post-text') コメント:
+            textarea(id='comment-post-text', name='text')
+            input(id='comment-post-submit' type='submit' value='送信')
+            
+    .ui-bar(data-role='footer')
+      span mobbs ver0.0.1
+      a(href='#about') about...

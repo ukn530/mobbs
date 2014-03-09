@@ -1,0 +1,35 @@
+extends layout
+block content
+
+  #topic(data-role="page")
+    .header(data-role='header')
+      h1#topic-title トピック:#{topic.title}
+      a(href='/#topics', data-ajax='false', data-role='button') 一覧
+    div(data-role='content')
+      h1 #{topic.title}
+      p #{topic.text}
+      p
+        | #{topic.date},
+        a(href='#{topic.relatedUrl}') #{topic.postBy}
+
+        div(data-role="collapsible", data-theme="b", data-content-theme="c", data-collapsed='false')
+          h2 コメント:
+          ul#comments-listview(data-role='listview', mobbs-topic-id=topic.topicId)
+
+        div(data-role="collapsible", data-theme="b", data-content-theme="c")
+          h2 コメントを投稿する
+          form(action='/comment/create/', method='post', data-ajax='false')
+            input(type='hidden', name='topicId' value='#{topic.topicId}')
+            label(for='comment-post-name') お名前:
+            input(type='text', id='comment-post-name', name='name')
+            label(for='comment-post-related') URL:
+            input(type='url', id='comment-post-related', name='relatedUrl')
+            label(for='comment-post-title') タイトル:
+            input(type='text', id='comment-post-title', name='title')
+            label(for='comment-post-text') コメント:
+            textarea(id='comment-post-text', name='text')
+            input(id='comment-post-submit' type='submit' value='送信')
+            
+    .ui-bar(data-role='footer')
+      span mobbs ver0.0.1
+      a(href='#about') about...
